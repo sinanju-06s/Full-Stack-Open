@@ -59,3 +59,88 @@ app.get('/', (req, res) => {
 
 
 
+### Running application logic in the browser
+
+Entrando na parte de notes do site (https://studies.cs.helsinki.fi/exampleapp/notes) vemos que o browser faz 4 requisições.
+A primeira requisição é o código HTML da pagina:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="/exampleapp/main.css" />
+  <script type="text/javascript" src="/exampleapp/main.js"></script>
+</head>
+<body>
+  <div class='container'>
+    <h1>Notes</h1>
+    <div id='notes'>
+    </div>
+    <form action='/exampleapp/new_note' method='POST'>
+      <input type="text" name="note"><br>
+      <input type="submit" value="Save">
+    </form>
+  </div>
+</body>
+</html>
+```
+
+Comparando o código HTML com a pagina vemos que tem  uma falta de notas escritas por anônimos. Mas é possível ver na parte do HEAD do documento um script de JavaScript sendo ele o main.js que é o terceiro documento retornado pelo servidor.
+```javascript
+var xhttp = new XMLHttpRequest()
+  
+xhttp.onreadystatechange = function () {
+  if (this.readyState == 4 && this.status == 200) {
+    const data = JSON.parse(this.responseText)
+    console.log(data)
+
+    var ul = document.createElement('ul')
+    ul.setAttribute('class', 'notes')
+
+    data.forEach(function(note){
+      var li = document.createElement('li')
+      
+      ul.appendChild(li);
+      li.appendChild(document.createTextNode(note.content))
+    })
+
+    document.getElementById("notes").appendChild(ul)
+  }
+}
+
+xhttp.open("GET", "/exampleapp/data.json", true)
+xhttp.send()
+```
+
+E observando of fim do código vemos que ele faz um HTTP GET para servidor para pegar o arquivo data.json que onde fica salvo as notas do arquivo.
+![Json](Imagens/img_0/json.png)
+
+### Event handlers and Callback functions
+
+```javascript
+var xhttp = new XMLHttpRequest()
+
+xhttp.onreadystatechange = function() {
+  // code that takes care of the server response
+}
+
+xhttp.open('GET', '/data.json', true)
+xhttp.send(
+```
+
+Observando esse código é possivel perceber que ele é estranho pois o pedido para o servidor se encontra na ultima linha mas o código lida com as reposta antes.
+A resposta para essa situação ocorre quando o estado do xhttp muda assim fazendo com que verifique a função:
+
+``` javascript
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    // code that takes care of the server response
+  }
+}
+```
+
+Esse mecanismo é chamado de *callback* function , elas são aplicações em que não é o código que invoca a função mas sim o browser , para que ela seja chamada quando o evento ocorra.
+
+### Document Object Moder or DOM
+
+Entendi porra nenhuma
