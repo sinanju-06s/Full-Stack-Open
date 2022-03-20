@@ -113,6 +113,7 @@ xhttp.send()
 ```
 
 E observando of fim do código vemos que ele faz um HTTP GET para servidor para pegar o arquivo data.json que onde fica salvo as notas do arquivo.
+
 ![Json](Imagens/img_0/json.png)
 
 ### Event handlers and Callback functions
